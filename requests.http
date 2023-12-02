@@ -1,0 +1,111 @@
+### 1. Создать токен для дальнейшего использования (email и password указываем суперюзера).
+POST http://localhost/api/v1/auth/jwt/create/
+Content-Type: application/json
+
+{
+  "email": "admin@admin.org",
+  "password": "admin12345"
+}
+
+# затем копируем значение (сам токен) по ключу: "access": "....." и вставляем ниже во всех запросах после префикса JWT [скопированный Токен]
+
+
+### 2. Вариант загрузки данных файла через имя файла в строке (GET либо POST) :
+POST http://localhost/api/v1/products-import-data/?file_name=import_2.yaml
+Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzAyMDg5NDMwLCJpYXQiOjE3MDE0ODQ2MzAsImp0aSI6ImQ3ZGRjOWZiNzI0MjQ0NjFiN2U4NTVjZmI2NzA0ZmU0IiwidXNlcl9pZCI6MX0.t8RNqpcoGQXk41B8HBH9XfEY07ZxErAXnwLAIfD5C0g
+
+
+
+### 3. Вариант загрузки файла через Postman / Insomnia. 
+#    Выбираем POST - запрос, вставляем ссылку 
+#    Токен указываем по ключу: "Bearer Token". 
+#    Body: Key указываем: "file". Value: прикрепляем файл.
+
+POST http://localhost:8000/api/v1/products-import-file/
+Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzAxNjc4MDA4LCJpYXQiOjE3MDEwNzMyMDgsImp0aSI6IjY2NDVjZWFjM2IwYTQ0NDZiMTRlMGE1ZDIzODJiYzAzIiwidXNlcl9pZCI6MX0.IenrvWqylaUrbS3SYctz-jr1yc7OTBOXlfidPOw8yPg
+
+
+
+### 4. Вывод всех имеющихся товаров. GET-запрос. (Для просмотра можно без авторизации)
+GET http://localhost:8000/api/v1/items/
+
+
+
+### 6. Отправка товаров в корзину (для уменьшения кол-ва товаров указывать значение "qty" со знаком минус)
+POST http://localhost:8000/api/v1/basket-rows/
+Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzAxNjgwNDY4LCJpYXQiOjE3MDEwNzU2NjgsImp0aSI6ImE1OWQ3YWQ2NWYwNjRhN2Q5NmZkMTE2YjE3OTZjNzgwIiwidXNlcl9pZCI6MX0.5bULL4xk8jKQleb2j7w9p89zYKEQ9jk-1TvTAWZpAOE
+
+{
+  "tovar_id": 4,
+  "qty": 1
+}
+
+
+
+### 7. Orders. Покупка одним кликом. Отправляется весь товар из корзины пользователя в Новый Заказ
+POST http://localhost:8000/api/v1/orders/checkout/
+Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzAxNjgwNDY4LCJpYXQiOjE3MDEwNzU2NjgsImp0aSI6ImE1OWQ3YWQ2NWYwNjRhN2Q5NmZkMTE2YjE3OTZjNzgwIiwidXNlcl9pZCI6MX0.5bULL4xk8jKQleb2j7w9p89zYKEQ9jk-1TvTAWZpAOE
+
+
+### 8. Orders. Покупки. Изменение статуса на "отменен"
+PATCH http://localhost:8000/api/v1/orders/20/
+Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzAxNjgwNDY4LCJpYXQiOjE3MDEwNzU2NjgsImp0aSI6ImE1OWQ3YWQ2NWYwNjRhN2Q5NmZkMTE2YjE3OTZjNzgwIiwidXNlcl9pZCI6MX0.5bULL4xk8jKQleb2j7w9p89zYKEQ9jk-1TvTAWZpAOE
+
+{
+  "status": "отменен"
+  }
+
+
+
+### ПРОСМОТРЫ КОРЗИНЫ И ЗАКАЗОВ: 
+
+### 9. Basket. Просмотр товаров в Корзине (либо всех, либо конкретного по id) Товары можно увидеть только собственные
+GET http://localhost:8000/api/v1/basket-rows/
+Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzAxNjgwNDY4LCJpYXQiOjE3MDEwNzU2NjgsImp0aSI6ImE1OWQ3YWQ2NWYwNjRhN2Q5NmZkMTE2YjE3OTZjNzgwIiwidXNlcl9pZCI6MX0.5bULL4xk8jKQleb2j7w9p89zYKEQ9jk-1TvTAWZpAOE
+
+
+### 10. Orders. Просмотр покупок в Заказе (либо всех либо конкретной по id) Товары в заказе можно увидеть только собственные
+GET http://localhost:8000/api/v1/orders/1/
+Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzAxNjgwNDY4LCJpYXQiOjE3MDEwNzU2NjgsImp0aSI6ImE1OWQ3YWQ2NWYwNjRhN2Q5NmZkMTE2YjE3OTZjNzgwIiwidXNlcl9pZCI6MX0.5bULL4xk8jKQleb2j7w9p89zYKEQ9jk-1TvTAWZpAOE
+
+
+
+### Дополнительно.
+
+### Вывод всех товаров с Фильтрацией, сортировкой и пагинацией. 
+#    limit             - пагинация (кол-во на страницу)
+#    ordering          - сортировка 
+#    product__category - сортировка по категории
+#    search            - поиск по слову  
+GET http://localhost:8000/api/v1/items/?limit=5&ordering=-price&product__category=1&search=XS
+Content-Type: application/json
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzAxNjc4MDA4LCJpYXQiOjE3MDEwNzMyMDgsImp0aSI6IjY2NDVjZWFjM2IwYTQ0NDZiMTRlMGE1ZDIzODJiYzAzIiwidXNlcl9pZCI6MX0.IenrvWqylaUrbS3SYctz-jr1yc7OTBOXlfidPOw8yPg
+
+
+###  Создание Юзера
+POST http://localhost/api/v1/auth/users/
+Content-Type: application/json
+
+{
+  "email": "admin@admin.org",
+  "password": "admin12345"
+}
+
+# После создания юзера, чтобы в будущем иметь возможность загрузки товаров на платформу, в Админке нужно поставить галочку (boolean) - is_vendor
+
+
+### Проверка данных Юзера
+GET http://localhost:8000/api/v1/auth/users/me/
+Authorization: JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzAxNjc4MDA4LCJpYXQiOjE3MDEwNzMyMDgsImp0aSI6IjY2NDVjZWFjM2IwYTQ0NDZiMTRlMGE1ZDIzODJiYzAzIiwidXNlcl9pZCI6MX0.IenrvWqylaUrbS3SYctz-jr1yc7OTBOXlfidPOw8yPg
+
+
+
+
+
